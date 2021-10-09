@@ -30,5 +30,16 @@ const gameBoard = (function() {
     return {markGrid, checkLegalGrid, checkWin, getBoardGrids};
 })();
 
+function PlayerFactory(name, marker) {
+
+    function getMarker(){
+        return marker;
+    }
+    function getName() {
+        return name;
+    }
+
+    return{getMarker, getName}
+}
 
 
