@@ -42,4 +42,19 @@ function PlayerFactory(name, marker) {
     return{getMarker, getName}
 }
 
+const game = (function() {
+    const _player1 = PlayerFactory('Player X', 'X');
+    const _player2 = PlayerFactory('Player O', 'O');
+    let _currentPlayer = _player1;
+
+    function playerTurn(gridIndex) {
+        gameBoard.markGrid(gridIndex, _currentPlayer.getMarker());
+        _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
+        return _currentPlayer == _player1 ? _player2.getMarker() : _player1.getMarker();
+    }
+
+    return {playerTurn}
+})();
+
+
 
