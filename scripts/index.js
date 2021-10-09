@@ -48,9 +48,13 @@ const game = (function() {
     let _currentPlayer = _player1;
 
     function playerTurn(gridIndex) {
-        gameBoard.markGrid(gridIndex, _currentPlayer.getMarker());
-        _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
-        return _currentPlayer == _player1 ? _player2.getMarker() : _player1.getMarker();
+        const validMove = gameBoard.checkLegalGrid(gridIndex);
+        if (validMove){
+            gameBoard.markGrid(gridIndex, _currentPlayer.getMarker());
+            _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
+            return _currentPlayer == _player1 ? _player2.getMarker() : _player1.getMarker();
+        }
+        return false;
     }
 
     return {playerTurn}
@@ -65,7 +69,9 @@ const displayController = (function() {
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
         const playerMark = game.playerTurn(selectedGridIndex);
-        markDomGrid(selectedGridIndex, playerMark);
+        if (playerMark){
+            markDomGrid(selectedGridIndex, playerMark);
+        }
     }
 
     function getBoardGridIndex(clickedGrid){
