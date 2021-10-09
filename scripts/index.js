@@ -54,10 +54,7 @@ const game = (function() {
     let _gameplayMode = null;
     let _player1 = null;
     let _player2 = null;
-
-    // const _player1 = PlayerFactory('Player X', 'X');
-    // const _player2 = PlayerFactory('Player O', 'O');
-    // let _currentPlayer = _player1;
+    let _currentPlayer = null;
     
 
     function playerTurn(gridIndex) {
@@ -107,8 +104,12 @@ const game = (function() {
         return _player2;
     }
 
+    function setStarterPlayer() {
+        _currentPlayer = _player1;
+    }
+
     return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode, 
-        setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer}
+        setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer, setStarterPlayer}
 })();
 
 const displayController = (function() {
@@ -116,12 +117,14 @@ const displayController = (function() {
     boardGrids.forEach((boardGrid) => {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
+    disableBoardGrids();
     
     const startButton = document.querySelector('#start-button');
     startButton.addEventListener('click', startGame);
 
     function startGame(){
         displayChooseGameplayForm();
+        enableBoardGrids();
     }
 
     function preparePlayers() {
@@ -130,6 +133,8 @@ const displayController = (function() {
         }
         if(!game.getSecondPlayer() || !game.getFirstPlayer()){
             displayNameForm();
+        }else{
+            game.setStarterPlayer();
         }
     }
 
