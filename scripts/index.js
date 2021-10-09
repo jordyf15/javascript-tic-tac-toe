@@ -18,12 +18,16 @@ const gameBoard = (function() {
     function checkWin(){
         for(let i = 0; i<3; i++){
             if(_boardGrids[(i*3)] == _boardGrids[(i*3)+1] && 
-            _boardGrids[(i*3)+1] == _boardGrids[(i*3)+2]) return true;
+            _boardGrids[(i*3)+1] == _boardGrids[(i*3)+2] && 
+            _boardGrids[(i*3)] !== null) return true;
             if(_boardGrids[0+i] == _boardGrids[3+i] &&
-                _boardGrids[3+i] == _boardGrids[6+i]) return true;
+                _boardGrids[3+i] == _boardGrids[6+i] &&
+                _boardGrids[0+i] !== null) return true;
         }
-        if(_boardGrids[0] == _boardGrids[4] && _boardGrids[4] == _boardGrids[8]) return true;
-        if(_boardGrids[2] == _boardGrids[4] && _boardGrids[4] == _boardGrids[6]) return true;
+        if(_boardGrids[0] == _boardGrids[4] && _boardGrids[4] == _boardGrids[8]
+            &&_boardGrids[0] !== null) return true;
+        if(_boardGrids[2] == _boardGrids[4] && _boardGrids[4] == _boardGrids[6]
+            && _boardGrids[2] !== null) return true;
         return false;
     }
 
@@ -57,7 +61,20 @@ const game = (function() {
         return false;
     }
 
-    return {playerTurn}
+    function gameOver() {
+        const gameOver = gameBoard.checkWin();
+        return gameOver;
+    }
+
+    function getWinner(){
+        return _currentPlayer == _player1 ? _player2.getName() : _player1.getName();
+    }
+
+    function getCurrentPlayer(){
+        return _currentPlayer.getName();
+    }
+
+    return {playerTurn, gameOver, getWinner, getCurrentPlayer}
 })();
 
 const displayController = (function() {
@@ -65,13 +82,32 @@ const displayController = (function() {
     boardGrids.forEach((boardGrid) => {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
+    displayTurn(game.getCurrentPlayer());
 
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
         const playerMark = game.playerTurn(selectedGridIndex);
         if (playerMark){
             markDomGrid(selectedGridIndex, playerMark);
+            if(game.gameOver()) {
+                const winner = game.getWinner();
+                displayWinner(winner);
+                disableBoardGrids();
+            }else{
+                const currentPlayerName = game.getCurrentPlayer();
+                displayTurn(currentPlayerName);
+            }
         }
+    }
+
+    function displayWinner(winner) {
+        const statusMsg = document.querySelector('#status-msg');
+        statusMsg.textContent = `${winner} has won!`;
+    }
+
+    function displayTurn(currentPlayerName){
+        const statusMsg = document.querySelector('#status-msg');
+        statusMsg.textContent = `${currentPlayerName}'s turn`;
     }
 
     function getBoardGridIndex(clickedGrid){
@@ -81,5 +117,17 @@ const displayController = (function() {
     function markDomGrid(gridIndex, marker) {
         const selectedGrid = document.querySelector(`#grid-${gridIndex}`);
         selectedGrid.textContent = marker;
+    }
+    
+    function disableBoardGrids(){
+        boardGrids.forEach((boardGrid)=>{
+            boardGrid.disabled = true;
+        })
+    }
+    
+    function enableBoardGrids(){
+        boardGrids.forEach((boardGrid)=> {
+            boardGrid.disabled = false;
+        })
     }
 })();
