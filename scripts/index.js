@@ -92,7 +92,7 @@ const displayController = (function() {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
     displayTurn(game.getCurrentPlayer());
-    displayChooseGameplayForm();
+    displayNameForm();
 
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
@@ -239,5 +239,53 @@ const displayController = (function() {
         vsSpan.className='vs';
         vsSpan.textContent = 'VS';
         return vsSpan;
+    }
+
+    function displayNameForm() {
+        const main = document.querySelector('main');
+        const formBg = document.createElement('div');
+        formBg.id = 'name-form-bg';
+        main.appendChild(formBg);
+
+        const nameForm = document.createElement('form');
+        nameForm.id = 'name-form';
+        formBg.appendChild(nameForm);
+
+        const formTitle = document.createElement('h2');
+        formTitle.textContent = 'Insert your player name';
+        formTitle.id = 'name-form-title';
+        nameForm.appendChild(formTitle);
+
+        const nameInput = document.createElement('input');
+        nameInput.required = true;
+        nameInput.type = 'text';
+        nameInput.id = 'input-name';
+        nameInput.placeholder = 'Insert your name here';
+        nameForm.appendChild(nameInput);
+
+        const alertMsg = document.createElement('p');
+        alertMsg.className = 'error-msg';
+        nameForm.appendChild(alertMsg);
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'button';
+        submitButton.textContent = 'Confirm';
+        submitButton.id = 'name-form-button';
+        submitButton.addEventListener('click', insertNameSubmit);
+
+        nameForm.appendChild(submitButton);
+    }
+
+    function insertNameSubmit() {
+        const playerName = document.querySelector('#input-name').value;
+        if(playerName.length>0){
+            const main = document.querySelector('main');
+            const formBg = document.querySelector('#name-form-bg');
+            main.removeChild(formBg);
+        }else{
+            const alertMsg = document.querySelector('.error-msg');
+            alertMsg.textContent = 'Please input your name';
+        }
+        
     }
 })();
