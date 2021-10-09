@@ -70,7 +70,11 @@ const game = (function() {
         return _currentPlayer == _player1 ? _player2.getName() : _player1.getName();
     }
 
-    return {playerTurn, gameOver, getWinner}
+    function getCurrentPlayer(){
+        return _currentPlayer.getName();
+    }
+
+    return {playerTurn, gameOver, getWinner, getCurrentPlayer}
 })();
 
 const displayController = (function() {
@@ -78,6 +82,7 @@ const displayController = (function() {
     boardGrids.forEach((boardGrid) => {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
+    displayTurn(game.getCurrentPlayer());
 
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
@@ -87,6 +92,9 @@ const displayController = (function() {
             if(game.gameOver()) {
                 const winner = game.getWinner();
                 displayWinner(winner);
+            }else{
+                const currentPlayerName = game.getCurrentPlayer();
+                displayTurn(currentPlayerName);
             }
         }
     }
@@ -94,6 +102,11 @@ const displayController = (function() {
     function displayWinner(winner) {
         const statusMsg = document.querySelector('#status-msg');
         statusMsg.textContent = `${winner} has won!`;
+    }
+
+    function displayTurn(currentPlayerName){
+        const statusMsg = document.querySelector('#status-msg');
+        statusMsg.textContent = `${currentPlayerName}'s turn`;
     }
 
     function getBoardGridIndex(clickedGrid){
