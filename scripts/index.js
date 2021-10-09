@@ -56,5 +56,24 @@ const game = (function() {
     return {playerTurn}
 })();
 
+const displayController = (function() {
+    const boardGrids = Array.from(document.getElementsByClassName('board-grids'));
+    boardGrids.forEach((boardGrid) => {
+        boardGrid.addEventListener('click', clickBoardGrid);
+    });
 
+    function clickBoardGrid() {
+        const selectedGridIndex = getBoardGridIndex(this);
+        const playerMark = game.playerTurn(selectedGridIndex);
+        markDomGrid(selectedGridIndex, playerMark);
+    }
 
+    function getBoardGridIndex(clickedGrid){
+        return parseInt(clickedGrid.id.split('-')[1]);
+    }
+
+    function markDomGrid(gridIndex, marker) {
+        const selectedGrid = document.querySelector(`#grid-${gridIndex}`);
+        selectedGrid.textContent = marker;
+    }
+})();
