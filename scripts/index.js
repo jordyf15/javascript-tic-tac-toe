@@ -50,13 +50,28 @@ function PlayerFactory(name, marker, type) {
     return{getMarker, getName, getType}
 }
 
+const AILogic = (function(){
+    function getAllValidMoves() {
+        console.log(gameBoard.getBoardGrids());
+        const emptyGrids = [1,2,3,4,5,6,7,8,9].filter((idx)=>{
+            return gameBoard.getBoardGrids()[idx-1] === null;
+        })
+        return emptyGrids;
+    } 
+    function randomMove(){
+        const validGrids = getAllValidMoves();
+        const randomMove = validGrids[Math.floor(Math.random() * validGrids.length)];
+        return randomMove;
+    }
+    return {randomMove}
+})();
+
 const game = (function() {
     let _gameplayMode = null;
     let _player1 = null;
     let _player2 = null;
     let _currentPlayer = null;
     
-
     function playerTurn(gridIndex) {
         const validMove = gameBoard.checkLegalGrid(gridIndex);
         if (validMove){
@@ -65,6 +80,16 @@ const game = (function() {
             return _currentPlayer == _player1 ? _player2.getMarker() : _player1.getMarker();
         }
         return false;
+    }
+
+    function checkNextPlayerAI(){
+        if(_currentPlayer.getType() === 'AI'){
+            const selectedGridIndex = AILogic.randomMove();
+            const AIMarker = _currentPlayer.getMarker();
+            gameBoard.markGrid(selectedGridIndex, AIMarker);
+            _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
+            return {selectedGridIndex, AIMarker}
+        }
     }
 
     function gameOver() {
@@ -109,7 +134,8 @@ const game = (function() {
     }
 
     return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode, 
-        setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer, setStarterPlayer}
+        setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer, setStarterPlayer,
+        checkNextPlayerAI}
 })();
 
 const displayController = (function() {
@@ -150,6 +176,10 @@ const displayController = (function() {
             }else{
                 const currentPlayerName = game.getCurrentPlayer();
                 displayTurn(currentPlayerName);
+                const AIResult = game.checkNextPlayerAI();
+                if (AIResult){
+                    markDomGrid(AIResult.selectedGridIndex, AIResult.AIMarker);
+                }
             }
         }
     }
