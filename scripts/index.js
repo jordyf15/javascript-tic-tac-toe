@@ -50,6 +50,7 @@ const game = (function() {
     const _player1 = PlayerFactory('Player X', 'X');
     const _player2 = PlayerFactory('Player O', 'O');
     let _currentPlayer = _player1;
+    let _gameplayMode = null;
 
     function playerTurn(gridIndex) {
         const validMove = gameBoard.checkLegalGrid(gridIndex);
@@ -74,7 +75,15 @@ const game = (function() {
         return _currentPlayer.getName();
     }
 
-    return {playerTurn, gameOver, getWinner, getCurrentPlayer}
+    function setGameplayMode(gameplayMode) {
+        _gameplayMode = gameplayMode;
+    }
+
+    function getGameplayMode(){
+        return _gameplayMode;
+    }
+
+    return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode}
 })();
 
 const displayController = (function() {
@@ -83,6 +92,7 @@ const displayController = (function() {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
     displayTurn(game.getCurrentPlayer());
+    displayChooseGameplayForm();
 
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
@@ -129,5 +139,105 @@ const displayController = (function() {
         boardGrids.forEach((boardGrid)=> {
             boardGrid.disabled = false;
         })
+    }
+
+    function displayChooseGameplayForm(){
+        const main = document.querySelector('main');
+        const chooseGameplayBg = document.createElement('div');
+        chooseGameplayBg.id = 'choose-gameplay-bg';
+        main.appendChild(chooseGameplayBg);
+
+        const chooseGameplayForm = document.createElement('form');
+        chooseGameplayForm.id = 'choose-gameplay-form';
+        chooseGameplayBg.appendChild(chooseGameplayForm);
+
+        const chooseGameplayHeading = document.createElement('h2');
+        chooseGameplayHeading.textContent = 'Choose the gameplay';
+        chooseGameplayForm.appendChild(chooseGameplayHeading);
+
+        const vsAIRadio = document.createElement('input');
+        vsAIRadio.className = 'gameplayRB';
+        vsAIRadio.type = 'radio';
+        vsAIRadio.name = 'gameplay';
+        vsAIRadio.value = 'vsAI';
+        vsAIRadio.id = 'vsAI';
+        chooseGameplayForm.appendChild(vsAIRadio);
+
+        const vsAILabel = document.createElement('label');
+        vsAILabel.className = 'gameplay-lbl';
+        vsAILabel.setAttribute('for', 'vsAI');
+        vsAILabel.appendChild(renderPlayerIcon());
+        vsAILabel.appendChild(renderVsIcon());
+        vsAILabel.appendChild(renderAiIcon());
+        chooseGameplayForm.appendChild(vsAILabel);
+        
+        const vsAIText = document.createElement('p');
+        vsAIText.className = 'gameplay-desc';
+        vsAIText.textContent = 'Play against a computer';
+        chooseGameplayForm.appendChild(vsAIText);
+
+        const vsPlayerRadio = document.createElement('input');
+        vsPlayerRadio.className = 'gameplayRB';
+        vsPlayerRadio.type = 'radio';
+        vsPlayerRadio.name = 'gameplay';
+        vsPlayerRadio.value = 'vsPlayer';
+        vsPlayerRadio.id = 'vsPlayer';
+        chooseGameplayForm.appendChild(vsPlayerRadio);
+
+        const vsPlayerLabel = document.createElement('label');
+        vsPlayerLabel.className = 'gameplay-lbl';
+        vsPlayerLabel.setAttribute('for','vsPlayer');
+        vsPlayerLabel.appendChild(renderPlayerIcon());
+        vsPlayerLabel.appendChild(renderVsIcon());
+        vsPlayerLabel.appendChild(renderPlayerIcon());
+        chooseGameplayForm.appendChild(vsPlayerLabel);
+
+        const vsPlayerText = document.createElement('p');
+        vsPlayerText.className = 'gameplay-desc';
+        vsPlayerText.textContent = 'Play against a computer';
+        chooseGameplayForm.appendChild(vsPlayerText);
+
+        const errorMsg = document.createElement('p');
+        errorMsg.className = 'error-msg';
+        chooseGameplayForm.appendChild(errorMsg);
+
+        const submitButton = document.createElement('button');
+        submitButton.type = 'button';
+        submitButton.textContent = 'Confirm';
+        submitButton.id = 'gameplay-form-button';
+        submitButton.addEventListener('click', chooseGameplaySubmit);
+        chooseGameplayForm.appendChild(submitButton);
+    }
+
+    function chooseGameplaySubmit(){
+        const checkedRB = document.querySelector('input[name="gameplay"]:checked');
+        if(checkedRB){
+            game.setGameplayMode(checkedRB.value);
+            const main = document.querySelector('main');
+            const chooseGameplayBg = document.querySelector('#choose-gameplay-bg');
+            main.removeChild(chooseGameplayBg);
+        }else{
+            const errorMsg = document.querySelector('#choose-gameplay-form .error-msg');
+            errorMsg.textContent = "Please choose a gameplay";
+        }
+    }
+
+    function renderAiIcon() {
+        const robotIcon = document.createElement('i');
+        robotIcon.classList.add('fas', 'fa-robot');
+        return robotIcon;
+    }
+
+    function renderPlayerIcon() {
+        const humanIcon = document.createElement('i');
+        humanIcon.classList.add('fas', 'fa-user');
+        return humanIcon;
+    }
+
+    function renderVsIcon() {
+        const vsSpan = document.createElement('span');
+        vsSpan.className='vs';
+        vsSpan.textContent = 'VS';
+        return vsSpan;
     }
 })();
