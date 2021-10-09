@@ -3,6 +3,10 @@ const gameBoard = (function() {
                         null,null,null,
                         null,null,null];
 
+    function getBoardGrids() {
+        return _boardGrids;
+    }
+
     function markGrid(grid, mark){
         const gridIndex = grid-1;
         _boardGrids[gridIndex] = mark;
@@ -23,7 +27,8 @@ const gameBoard = (function() {
         return false;
     }
 
-    return {markGrid, checkLegalGrid, checkWin};
+    return {markGrid, checkLegalGrid, checkWin, getBoardGrids};
 })();
+
 
 
