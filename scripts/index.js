@@ -34,7 +34,7 @@ const gameBoard = (function() {
     return {markGrid, checkLegalGrid, checkWin, getBoardGrids};
 })();
 
-function PlayerFactory(name, marker) {
+function PlayerFactory(name, marker, type) {
 
     function getMarker(){
         return marker;
@@ -43,14 +43,22 @@ function PlayerFactory(name, marker) {
         return name;
     }
 
-    return{getMarker, getName}
+    function getType() {
+        return type;
+    }
+
+    return{getMarker, getName, getType}
 }
 
 const game = (function() {
-    const _player1 = PlayerFactory('Player X', 'X');
-    const _player2 = PlayerFactory('Player O', 'O');
-    let _currentPlayer = _player1;
     let _gameplayMode = null;
+    let _player1 = null;
+    let _player2 = null;
+
+    // const _player1 = PlayerFactory('Player X', 'X');
+    // const _player2 = PlayerFactory('Player O', 'O');
+    // let _currentPlayer = _player1;
+    
 
     function playerTurn(gridIndex) {
         const validMove = gameBoard.checkLegalGrid(gridIndex);
@@ -83,7 +91,24 @@ const game = (function() {
         return _gameplayMode;
     }
 
-    return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode}
+    function setSecondPlayer(name, marker, type) {
+        _player2 = PlayerFactory(name, marker, type);
+    }
+
+    function setFirstPlayer(name, marker, type) {
+        _player1 = PlayerFactory(name, marker, type);
+    }
+
+    function getFirstPlayer() {
+        return _player1;
+    }
+
+    function getSecondPlayer() {
+        return _player2;
+    }
+
+    return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode, 
+        setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer}
 })();
 
 const displayController = (function() {
@@ -91,8 +116,22 @@ const displayController = (function() {
     boardGrids.forEach((boardGrid) => {
         boardGrid.addEventListener('click', clickBoardGrid);
     });
-    displayTurn(game.getCurrentPlayer());
-    displayNameForm();
+    
+    const startButton = document.querySelector('#start-button');
+    startButton.addEventListener('click', startGame);
+
+    function startGame(){
+        displayChooseGameplayForm();
+    }
+
+    function preparePlayers() {
+        if(game.getGameplayMode() === 'vsAI' && !game.getSecondPlayer()){
+            game.setSecondPlayer('computer', 'O', 'AI');
+        }
+        if(!game.getSecondPlayer() || !game.getFirstPlayer()){
+            displayNameForm();
+        }
+    }
 
     function clickBoardGrid() {
         const selectedGridIndex = getBoardGridIndex(this);
@@ -216,6 +255,7 @@ const displayController = (function() {
             const main = document.querySelector('main');
             const chooseGameplayBg = document.querySelector('#choose-gameplay-bg');
             main.removeChild(chooseGameplayBg);
+            preparePlayers();
         }else{
             const errorMsg = document.querySelector('#choose-gameplay-form .error-msg');
             errorMsg.textContent = "Please choose a gameplay";
@@ -282,10 +322,15 @@ const displayController = (function() {
             const main = document.querySelector('main');
             const formBg = document.querySelector('#name-form-bg');
             main.removeChild(formBg);
+            if(!game.getFirstPlayer()){
+                game.setFirstPlayer(playerName, 'X', 'Player');
+            }else{
+                game.setSecondPlayer(playerName, 'O', 'Player');
+            }
+            preparePlayers();
         }else{
             const alertMsg = document.querySelector('.error-msg');
             alertMsg.textContent = 'Please input your name';
         }
-        
     }
 })();
