@@ -92,6 +92,7 @@ const displayController = (function() {
             if(game.gameOver()) {
                 const winner = game.getWinner();
                 displayWinner(winner);
+                disableBoardGrids();
             }else{
                 const currentPlayerName = game.getCurrentPlayer();
                 displayTurn(currentPlayerName);
@@ -116,5 +117,17 @@ const displayController = (function() {
     function markDomGrid(gridIndex, marker) {
         const selectedGrid = document.querySelector(`#grid-${gridIndex}`);
         selectedGrid.textContent = marker;
+    }
+    
+    function disableBoardGrids(){
+        boardGrids.forEach((boardGrid)=>{
+            boardGrid.disabled = true;
+        })
+    }
+    
+    function enableBoardGrids(){
+        boardGrids.forEach((boardGrid)=> {
+            boardGrid.disabled = false;
+        })
     }
 })();
