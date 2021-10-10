@@ -358,7 +358,17 @@ const displayController = (function() {
         formBg.appendChild(nameForm);
 
         const formTitle = document.createElement('h2');
-        formTitle.textContent = 'Insert your player name';
+        let formTitleText = 'Insert ';
+        if(game.getGameplayMode() == 'vsAI'){
+            formTitleText+= 'your player name';
+        }else{
+            if(game.getFirstPlayer() === null){
+                formTitleText+= 'first player name';
+            }else{
+                formTitleText+= 'second player name';
+            }
+        }
+        formTitle.textContent = formTitleText;
         formTitle.id = 'name-form-title';
         nameForm.appendChild(formTitle);
 
