@@ -219,16 +219,7 @@ const displayController = (function() {
         const playerMark = game.playerTurn(selectedGridIndex);
         if (playerMark){
             markDomGrid(selectedGridIndex, playerMark);
-            const gameStatus = game.gameOver();
-            if(gameStatus !== 'continue') {
-                if(gameStatus === 'win'){
-                    const winner = game.getWinner();
-                    changeStatusMsg(`${winner} has won!`);
-                }else{
-                    changeStatusMsg('It\'s a draw');
-                }
-                disableBoardGrids();
-            }else{
+            if(!checkGameOver()){
                 const currentPlayerName = game.getCurrentPlayer();
                 changeStatusMsg(`${currentPlayerName}'s turn`);
                 const AIResult = game.checkNextPlayerAI();
