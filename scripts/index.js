@@ -201,10 +201,12 @@ const displayController = (function() {
     }
 
     function AIMovement(AIResult){
+        disableBoardGrids();
         setTimeout(()=>{
             markDomGrid(AIResult.selectedGridIndex, AIResult.AIMarker);
             const currentPlayerName = game.getCurrentPlayer();
             displayTurn(currentPlayerName);
+            enableBoardGrids();
         }, 500);    
     }
 
