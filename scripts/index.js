@@ -1,5 +1,5 @@
 const gameBoard = (function() {
-    const _boardGrids = [null,null,null,
+    let _boardGrids = [null,null,null,
                         null,null,null,
                         null,null,null];
 
@@ -36,7 +36,13 @@ const gameBoard = (function() {
         return emptyGrid.length === 0 ? true : false;
     }
 
-    return {markGrid, checkLegalGrid, checkWin, getBoardGrids, checkDraw};
+    function restartBoard() {
+        _boardGrids = [null,null,null,
+                        null,null,null,
+                        null,null,null];
+    }
+
+    return {markGrid, checkLegalGrid, checkWin, getBoardGrids, checkDraw, restartBoard};
 })();
 
 function PlayerFactory(name, marker, type) {
@@ -144,9 +150,17 @@ const game = (function() {
         _currentPlayer = _player1;
     }
 
+    function restartGame(){
+        gameBoard.restartBoard();
+        _gameplayMode = null;
+        _player1 = null;
+        _player2 = null;
+        _currentPlayer = null;
+    }
+
     return {playerTurn, gameOver, getWinner, getCurrentPlayer, setGameplayMode, getGameplayMode, 
         setFirstPlayer, setSecondPlayer, getFirstPlayer, getSecondPlayer, setStarterPlayer,
-        checkNextPlayerAI}
+        checkNextPlayerAI, restartGame}
 })();
 
 const displayController = (function() {
@@ -160,8 +174,30 @@ const displayController = (function() {
     startButton.addEventListener('click', startGame);
 
     function startGame(){
+        const buttonContainer = document.querySelector('#button-container');
         displayChooseGameplayForm();
-        enableBoardGrids();
+        buttonContainer.removeChild(startButton);
+        const restartButton = document.createElement('button');
+        restartButton.id = 'restart-button';
+        restartButton.textContent = 'Restart';
+        restartButton.addEventListener('click', restartGame);
+        buttonContainer.appendChild(restartButton);
+    }
+
+    function restartGame() {
+        disableBoardGrids();
+        game.restartGame();
+        const statusMsg = document.querySelector('#status-msg');
+        statusMsg.textContent = '';
+        emptyBoardGrids();
+        displayChooseGameplayForm();
+    }
+
+    function emptyBoardGrids() {
+        const boardGrids = Array.from(document.getElementsByClassName('board-grids'));
+        boardGrids.forEach((boardGrid) => {
+            boardGrid.textContent = '';
+        });
     }
 
     function preparePlayers() {
@@ -174,6 +210,7 @@ const displayController = (function() {
             game.setStarterPlayer();
             const currentPlayerName = game.getCurrentPlayer();
             displayTurn(currentPlayerName);
+            enableBoardGrids()
         }
     }
 
