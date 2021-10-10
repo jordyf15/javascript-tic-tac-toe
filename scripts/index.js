@@ -62,9 +62,6 @@ function PlayerFactory(name, marker, type) {
 }
 
 const AILogic = (function(){
-    let humanPlayer = 'X';
-    let aiPlayer = 'O';
-
     function getAllValidMoves() {
         const emptyGrids = [1,2,3,4,5,6,7,8,9].filter((idx)=>{
             return gameBoard.getBoardGrids()[idx-1] === null;
@@ -75,83 +72,6 @@ const AILogic = (function(){
         const validGrids = getAllValidMoves();
         const randomMove = validGrids[Math.floor(Math.random() * validGrids.length)];
         return randomMove;
-    }
-
-    function emptyBoardGridIndexes(board) {
-        return [0,1,2,3,4,5,6,7,8].filter((idx)=>board[idx]===null);
-    }
-    //   for(let i = 0; i<3; i++){
-    //         if(_boardGrids[(i*3)] == _boardGrids[(i*3)+1] && 
-    //         _boardGrids[(i*3)+1] == _boardGrids[(i*3)+2] && 
-    //         _boardGrids[(i*3)] !== null) return true;
-    //         if(_boardGrids[0+i] == _boardGrids[3+i] &&
-    //             _boardGrids[3+i] == _boardGrids[6+i] &&
-    //             _boardGrids[0+i] !== null) return true;
-    //     }
-    //     if(_boardGrids[0] == _boardGrids[4] && _boardGrids[4] == _boardGrids[8]
-    //         &&_boardGrids[0] !== null) return true;
-    //     if(_boardGrids[2] == _boardGrids[4] && _boardGrids[4] == _boardGrids[6]
-    //         && _boardGrids[2] !== null) return true;
-    //     return false;
-    function winning(board, player) {
-        for(let i = 0;i<3;i++){
-            if(board[(i*3)] === player && board[(i*3)+1] === player 
-            && board[(i*3)+2] === player) return true;
-            if(board[0+i] === player && board[(3+i)] === player
-            && board[6+i] === player) return true;
-            if(board[0] === player && board[4] === player && board[8] === player) return true;
-            if(board[2] === player && board[4] === player && board[6] === player) return true;
-            return false;
-        }
-    }
-
-    function minimax(newBoard, player) {
-        let availSpots = emptyBoardGridIndexes(newBoard);
-        if(winning(newBoard, humanPlayer)){
-            return {score: -10};
-        } else if(winning(newBoard, aiPlayer)){
-            return {score: 10};
-        } else if(availSpots.length === 0){
-            return {score: 0};
-        }
-
-        let moves = [];
-        for(let i = 0; i < availSpots.length; i++){
-            let move = {};
-            move.index = newBoard[availSpots[i]];
-            newBoard[availSpots[i]] = player;
-            
-            if(player == aiPlayer){
-                let result = minimax(newBoard, humanPlayer);
-                move.score = result.score;
-            }else{
-                let result = minimax(newBoard, aiPlayer);
-                move.score = result.score;
-            }
-            newBoard[availSpots[i]] = move.index;
-            moves.push(move);
-        }
-
-        let bestMove;
-        if(player === aiPlayer){
-            let bestScore = -10000;
-            for(let i = 0; i<moves.length; i++){
-                if(moves[i].score > bestScore){
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        }else{
-            let bestScore = 10000;
-            for(let i = 0; i< moves.length; i ++){
-                if(moves[i].score < bestScore){
-                    bestScore = moves[i].score;
-                    bestMove = i;
-                }
-            }
-        }
-
-        return moves[bestMove];
     }
     return {randomMove}
 })();
