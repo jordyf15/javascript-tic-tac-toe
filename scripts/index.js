@@ -209,7 +209,7 @@ const displayController = (function() {
         }else{
             game.setStarterPlayer();
             const currentPlayerName = game.getCurrentPlayer();
-            displayTurn(currentPlayerName);
+            changeStatusMsg(`${currentPlayerName}'s turn`);
             enableBoardGrids()
         }
     }
@@ -223,14 +223,14 @@ const displayController = (function() {
             if(gameStatus !== 'continue') {
                 if(gameStatus === 'win'){
                     const winner = game.getWinner();
-                    displayWinner(winner);
+                    changeStatusMsg(`${winner} has won!`);
                 }else{
-                    displayDraw();
+                    changeStatusMsg('It\'s a draw');
                 }
                 disableBoardGrids();
             }else{
                 const currentPlayerName = game.getCurrentPlayer();
-                displayTurn(currentPlayerName);
+                changeStatusMsg(`${currentPlayerName}'s turn`);
                 const AIResult = game.checkNextPlayerAI();
                 if (AIResult) AIMovement(AIResult);
             }
@@ -242,24 +242,31 @@ const displayController = (function() {
         setTimeout(()=>{
             markDomGrid(AIResult.selectedGridIndex, AIResult.AIMarker);
             const currentPlayerName = game.getCurrentPlayer();
-            displayTurn(currentPlayerName);
+            changeStatusMsg(`${currentPlayerName}'s turn`);
             enableBoardGrids();
+            checkGameOver();
         }, 500);    
     }
 
-    function displayWinner(winner) {
-        const statusMsg = document.querySelector('#status-msg');
-        statusMsg.textContent = `${winner} has won!`;
+    function checkGameOver() {
+        const gameStatus = game.gameOver();
+        if(gameStatus !== 'continue') {
+            if(gameStatus === 'win'){
+                const winner = game.getWinner();
+                changeStatusMsg(`${winner} has won!`);
+            }else{
+                changeStatusMsg('It\'s a draw');
+            }
+            disableBoardGrids();
+            return true;
+        }else{
+            return false;
+        }
     }
 
-    function displayDraw(){
+    function changeStatusMsg(message) {
         const statusMsg = document.querySelector('#status-msg');
-        statusMsg.textContent = 'It\'s a draw';
-    }
-
-    function displayTurn(currentPlayerName){
-        const statusMsg = document.querySelector('#status-msg');
-        statusMsg.textContent = `${currentPlayerName}'s turn`;
+        statusMsg.textContent = message;
     }
 
     function getBoardGridIndex(clickedGrid){
