@@ -31,7 +31,12 @@ const gameBoard = (function() {
         return false;
     }
 
-    return {markGrid, checkLegalGrid, checkWin, getBoardGrids};
+    function checkDraw() {
+        const emptyGrid = _boardGrids.filter((boardGrid)=>boardGrid===null);
+        return emptyGrid.length === 0 ? true : false;
+    }
+
+    return {markGrid, checkLegalGrid, checkWin, getBoardGrids, checkDraw};
 })();
 
 function PlayerFactory(name, marker, type) {
@@ -93,8 +98,13 @@ const game = (function() {
     }
 
     function gameOver() {
-        const gameOver = gameBoard.checkWin();
-        return gameOver;
+        if(gameBoard.checkWin()){
+            return 'win';
+        }else if(gameBoard.checkDraw()){
+            return 'draw';
+        }else{
+            return 'continue';
+        }
     }
 
     function getWinner(){
@@ -172,9 +182,14 @@ const displayController = (function() {
         const playerMark = game.playerTurn(selectedGridIndex);
         if (playerMark){
             markDomGrid(selectedGridIndex, playerMark);
-            if(game.gameOver()) {
-                const winner = game.getWinner();
-                displayWinner(winner);
+            const gameStatus = game.gameOver();
+            if(gameStatus !== 'continue') {
+                if(gameStatus === 'win'){
+                    const winner = game.getWinner();
+                    displayWinner(winner);
+                }else{
+                    displayDraw();
+                }
                 disableBoardGrids();
             }else{
                 const currentPlayerName = game.getCurrentPlayer();
@@ -196,6 +211,11 @@ const displayController = (function() {
     function displayWinner(winner) {
         const statusMsg = document.querySelector('#status-msg');
         statusMsg.textContent = `${winner} has won!`;
+    }
+
+    function displayDraw(){
+        const statusMsg = document.querySelector('#status-msg');
+        statusMsg.textContent = 'It\'s a draw';
     }
 
     function displayTurn(currentPlayerName){
