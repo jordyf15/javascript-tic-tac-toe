@@ -130,6 +130,7 @@ const game = (function() {
     }
 
     function setStarterPlayer() {
+        console.log(_player1);
         _currentPlayer = _player1;
     }
 
@@ -161,6 +162,8 @@ const displayController = (function() {
             displayNameForm();
         }else{
             game.setStarterPlayer();
+            const currentPlayerName = game.getCurrentPlayer();
+            displayTurn(currentPlayerName);
         }
     }
 
@@ -177,11 +180,17 @@ const displayController = (function() {
                 const currentPlayerName = game.getCurrentPlayer();
                 displayTurn(currentPlayerName);
                 const AIResult = game.checkNextPlayerAI();
-                if (AIResult){
-                    markDomGrid(AIResult.selectedGridIndex, AIResult.AIMarker);
-                }
+                if (AIResult) AIMovement(AIResult);
             }
         }
+    }
+
+    function AIMovement(AIResult){
+        setTimeout(()=>{
+            markDomGrid(AIResult.selectedGridIndex, AIResult.AIMarker);
+            const currentPlayerName = game.getCurrentPlayer();
+            displayTurn(currentPlayerName);
+        }, 500);    
     }
 
     function displayWinner(winner) {
