@@ -401,10 +401,16 @@ const displayController = (function() {
         const main = document.querySelector('main');
         const formBg = document.createElement('div');
         formBg.id = 'name-form-bg';
+        formBg.addEventListener('click', ()=>{
+            main.removeChild(formBg);
+        })
         main.appendChild(formBg);
 
         const nameForm = document.createElement('form');
         nameForm.id = 'name-form';
+        nameForm.addEventListener('click', (e)=>{
+            e.stopPropagation();
+        })
         formBg.appendChild(nameForm);
 
         const formTitle = document.createElement('h2');
@@ -422,11 +428,18 @@ const displayController = (function() {
         formTitle.id = 'name-form-title';
         nameForm.appendChild(formTitle);
 
+        const exitButton = document.createElement('button');
+        exitButton.className = 'exit-btn';
+        exitButton.innerHTML = '<i class="fas fa-times"></i>';
+        exitButton.addEventListener('click', ()=>{
+            main.removeChild(formBg);
+        });
+        nameForm.appendChild(exitButton);
+
         const nameInput = document.createElement('input');
-        nameInput.required = true;
         nameInput.type = 'text';
         nameInput.id = 'input-name';
-        nameInput.placeholder = 'Insert your name here';
+        nameInput.placeholder = 'Input your name';
         nameForm.appendChild(nameInput);
 
         const alertMsg = document.createElement('p');

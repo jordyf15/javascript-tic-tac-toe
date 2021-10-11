@@ -93,7 +93,7 @@ footer i{
     color: black;
 }
 
-#choose-gameplay-bg{
+#choose-gameplay-bg, #name-form-bg{
     background-color: rgba(0,0,0,0.52);
     position: absolute;
     width: 100vw;
@@ -103,7 +103,7 @@ footer i{
     justify-content: center;
     align-items: center;
 }
-#choose-gameplay-form{
+#choose-gameplay-form, #name-form{
     position: relative;
     color: #c0c0c0;
     background-color: black;
@@ -113,11 +113,12 @@ footer i{
     text-align: center;
 }
 
-#choose-gameplay-form h2{
+#choose-gameplay-form h2, #name-form h2{
     border-bottom: 3px solid #c0c0c0;
     padding-bottom: 20px;
     margin-bottom: 30px;
     font-size: 30px;
+    margin-top: 45px;
 }
 input[type='radio']{
     display: none;
@@ -139,7 +140,7 @@ input[type='radio']{
     margin-bottom: 30px;
 }
 
-#gameplay-form-button{
+#gameplay-form-button, #name-form-button{
     color: #c0c0c0;
     background-color: black;
     border: 3px solid #c0c0c0;
@@ -149,9 +150,25 @@ input[type='radio']{
     margin-bottom: 20px;
 }
 
-#gameplay-form-button:hover{
+#gameplay-form-button:hover, #name-form-button:hover{
     background-color: #c0c0c0;
     color: black;
+}
+
+.error-msg{
+    font-size: 25px;
+    color: #c0030e;
+}
+
+#input-name{
+    border: none;
+    color: #c0c0c0;
+    border-bottom: 3px solid #c0c0c0;
+    background:none;
+    font-size: 25px;
+    font-family: 'VT323', monospace;
+    width: 70%;
+    padding: 0 10px;
 }
 
 .exit-btn{
@@ -175,4 +192,10 @@ input[type='radio']{
 input[type='radio']:checked+label{
     background-color: #c0c0c0;
     color: black;
+}
+
+@media only screen and (min-width: 500px) {
+    #choose-gameplay-form h2, #name-form h2{
+        margin-top: 20px;
+    }
 }
