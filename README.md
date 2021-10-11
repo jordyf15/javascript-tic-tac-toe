@@ -2,7 +2,7 @@
 A project made for the Odin Project Javascript course where we have to build a tic-tac-toe game with as little global code as possible by tucking everything inside of a module or factory. We can also allow the player to choose to play against an AI or another player.
 
 ## Live Demo
-
+https://jordyf15.github.io/javascript-tic-tac-toe/
 
 ## Installation and Usage
 Input the following command one-by-one to the terminal.  
