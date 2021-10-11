@@ -166,6 +166,7 @@ const displayController = (function() {
     const boardGrids = Array.from(document.getElementsByClassName('board-grids'));
     boardGrids.forEach((boardGrid) => {
         boardGrid.addEventListener('click', clickBoardGrid);
+        boardGrid.innerHTML = '&nbsp;';
     });
     disableBoardGrids();
     
@@ -195,7 +196,7 @@ const displayController = (function() {
     function emptyBoardGrids() {
         const boardGrids = Array.from(document.getElementsByClassName('board-grids'));
         boardGrids.forEach((boardGrid) => {
-            boardGrid.textContent = '';
+            boardGrid.innerHTML = '&nbsp;';
         });
     }
 
