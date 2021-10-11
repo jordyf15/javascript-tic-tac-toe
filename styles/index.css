@@ -104,6 +104,7 @@ footer i{
     align-items: center;
 }
 #choose-gameplay-form{
+    position: relative;
     color: #c0c0c0;
     background-color: black;
     border: 3px solid #c0c0c0;
@@ -151,6 +152,24 @@ input[type='radio']{
 #gameplay-form-button:hover{
     background-color: #c0c0c0;
     color: black;
+}
+
+.exit-btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #c0c0c0;
+    background-color: black;
+    border: none;
+    font-size: 25px;
+    border-bottom: 3px solid #c0c0c0;
+    border-left: 3px solid #c0c0c0;
+    padding: 5px 15px;
+}
+
+.exit-btn:hover{
+    color: black;
+    background-color: #c0c0c0;
 }
 
 input[type='radio']:checked+label{

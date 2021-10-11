@@ -285,15 +285,30 @@ const displayController = (function() {
         const main = document.querySelector('main');
         const chooseGameplayBg = document.createElement('div');
         chooseGameplayBg.id = 'choose-gameplay-bg';
+        chooseGameplayBg.addEventListener('click', ()=>{
+            main.removeChild(chooseGameplayBg);
+        })
         main.appendChild(chooseGameplayBg);
 
         const chooseGameplayForm = document.createElement('form');
         chooseGameplayForm.id = 'choose-gameplay-form';
+        chooseGameplayForm.addEventListener('click', (e)=>{
+            e.stopPropagation();
+        })
         chooseGameplayBg.appendChild(chooseGameplayForm);
 
         const chooseGameplayHeading = document.createElement('h2');
         chooseGameplayHeading.textContent = 'Choose the gameplay';
         chooseGameplayForm.appendChild(chooseGameplayHeading);
+
+        const exitButton = document.createElement('button');
+        exitButton.className = 'exit-btn';
+        exitButton.innerHTML = '<i class="fas fa-times"></i>';
+        exitButton.addEventListener('click', ()=>{
+            main.removeChild(chooseGameplayBg);
+        });
+        chooseGameplayForm.appendChild(exitButton);
+
 
         const vsAIRadio = document.createElement('input');
         vsAIRadio.className = 'gameplayRB';
