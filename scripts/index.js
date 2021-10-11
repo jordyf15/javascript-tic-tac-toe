@@ -349,7 +349,7 @@ const displayController = (function() {
 
         const vsPlayerText = document.createElement('p');
         vsPlayerText.className = 'gameplay-desc';
-        vsPlayerText.textContent = 'Play against a computer';
+        vsPlayerText.textContent = 'Play against another player';
         chooseGameplayForm.appendChild(vsPlayerText);
 
         const errorMsg = document.createElement('p');
