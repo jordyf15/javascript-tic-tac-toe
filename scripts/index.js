@@ -378,7 +378,7 @@ const displayController = (function() {
     function renderVsIcon() {
         const vsSpan = document.createElement('span');
         vsSpan.className='vs';
-        vsSpan.textContent = 'VS';
+        vsSpan.textContent = ' VS ';
         return vsSpan;
     }
 
